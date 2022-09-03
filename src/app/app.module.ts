@@ -1,3 +1,4 @@
+
 import { NgModule } from '@angular/core';
 import { AppRoutingModule } from './app-routing.module';
 import { BrowserModule } from '@angular/platform-browser';
@@ -12,15 +13,22 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatSelectModule } from '@angular/material/select';
 
 import { AppComponent } from './app.component';
-import { SearchBarComponent } from './component/search-bar/search-bar.component';
-import { HomeComponent } from './component/home/home.component';
+import { SearchBarComponent } from './components/search-bar/search-bar.component';
+import { HomeComponent } from './components/home/home.component';
+import { HttpHeadersInterceptor } from './interceptors/http-headers.interceptor';
+import { HttpErrorsInterceptor } from './interceptors/http-errors.interceptor';
+import { DetailsComponent } from './components/details/details.component';
+import { GameTabsComponent } from './components/game-tabs/game-tabs.component';
 
 @NgModule({
-  declarations: [AppComponent, SearchBarComponent, HomeComponent],
+  declarations: [
+    AppComponent,
+    SearchBarComponent,
+    HomeComponent,
+    DetailsComponent,
+    GameTabsComponent
+  ],
   imports: [
-    BrowserModule,
-    AppRoutingModule,
-    BrowserAnimationsModule,
     BrowserModule,
     AppRoutingModule,
     GaugeModule.forRoot(),
@@ -32,7 +40,18 @@ import { HomeComponent } from './component/home/home.component';
     MatTabsModule,
     MatIconModule,
   ],
-  providers: [],
+  providers: [
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: HttpHeadersInterceptor,
+      multi: true,
+    },
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: HttpErrorsInterceptor,
+      multi: true,
+    },
+  ],
   bootstrap: [AppComponent],
 })
 export class AppModule {}
